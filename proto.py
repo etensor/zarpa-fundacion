@@ -3,7 +3,6 @@ import streamlit as st
 from typing import List, Dict
 import sqlite3
 from streamlit.proto.DataFrame_pb2 import MultiIndex
-from session_state import SessionState
 import json
 from fpdf import FPDF
 from datetime import datetime,time
@@ -53,13 +52,13 @@ custom_html ="""
 """
 
 create_table()
-session_state = SessionState.get(
-    mascotas = {},
-    idx = 0
-)
+if 'mascotas' not in st.session_state:
+    st.session_state['mascotas'] = {}
+    st.session_state['idx'] = 0
 
-def create_mascota(nombre: str, edad: int, raza: str, foto: str, descripcion="Hermoso animal listo para amar y jugar", session_state=session_state):
-    session_state.mascotas[str(nombre)] = {
+
+def create_mascota(nombre: str, edad: int, raza: str, foto: str, descripcion="Hermoso animal listo para amar y jugar"):
+    st.session_state.mascotas[str(nombre)] = {
         "edad": edad,
         "raza": raza,
         "descripcion": descripcion,
@@ -72,20 +71,20 @@ def create_mascota(nombre: str, edad: int, raza: str, foto: str, descripcion="He
 
 def print_mascota(nombre : str):
     st.markdown(f'## Datos de {nombre}')
-    st.image(session_state.mascotas[nombre]['foto'])
-    st.markdown("Descripción: "+ session_state.mascotas[nombre]['descripcion'])
-    st.text('Edad: ' + str(session_state.mascotas[nombre]['edad']))
+    st.image(st.session_state.mascotas[nombre]['foto'])
+    st.markdown("Descripción: "+ st.session_state.mascotas[nombre]['descripcion'])
+    st.text('Edad: ' + str(st.session_state.mascotas[nombre]['edad']))
     return None
 
 def nav_mascotas():
-    id_nombre = [i for i in session_state.mascotas]
+    id_nombre = [i for i in st.session_state.mascotas]
     name : str
-    idx = session_state.idx
+    idx = st.session_state.idx
 
-    button_izq, img, button_der = st.beta_columns([0.75,4,0.5])
+    button_izq, img, button_der = st.columns([0.75,4,0.5])
     if button_izq.button("<",help="anterior") and idx > 0: idx=idx-1 
     if button_der.button(">",help="siguiente") and idx < len(id_nombre)-1: idx=idx+1
-    session_state.idx=idx
+    st.session_state.idx=idx
 
     with img:
         name = id_nombre[idx]
@@ -112,7 +111,7 @@ def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
     pdf.multi_cell(0,6,texto,align='C')
     pdf.rect(115,140,60,12)
     pdf.text(125,170,f"Hora Local: {hora}")
-    pdf.image(session_state.mascotas[mascota]['foto'],20,155,75,100)
+    pdf.image(st.session_state.mascotas[mascota]['foto'],20,155,75,100)
     y_coord = pdf.get_y() 
     pdf.text(25,y_coord,txt=f'Mascota: {mascota}')
     
@@ -143,7 +142,7 @@ def montar_mascotas():
             create_mascota(nombres[i],edades[i],tipos[i],f"./images/cat{i-5}.jpg")
     
     with open("data.json","w") as outfile:
-        data = json.dumps(session_state.mascotas)
+        data = json.dumps(st.session_state.mascotas)
         outfile.write(data)
     return None
 
@@ -164,11 +163,11 @@ if st.sidebar.button("Cargar Datos"):
         data = json.loads(data)
 
     st.sidebar.json(data)
-    session_state.mascotas = data
+    st.session_state.mascotas = data
 
 if st.sidebar.button("Guardar datos"):
     with open("data.json","w") as outfile:
-        data = json.dumps(session_state.mascotas)
+        data = json.dumps(st.session_state.mascotas)
         outfile.write(data)
     st.sidebar.markdown(" Datos guardados.")
 
