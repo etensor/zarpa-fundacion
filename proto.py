@@ -119,7 +119,7 @@ def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
 
 st.set_page_config(page_title='Zarpa',page_icon='🐶')
 
-icono, titulo = st.beta_columns([0.5,4])
+icono, titulo = st.columns([0.5,4])
 icono.image('./images/logo.jpg',output_format='JPG')
 titulo.title(' Zarpa Fundación Animal')
 titulo.markdown('####  Adopta, no compres.')
