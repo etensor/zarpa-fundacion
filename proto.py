@@ -1,8 +1,7 @@
 from PIL import Image
 import streamlit as st
-from typing import List, Dict
+# from typing import List, Dict
 import sqlite3
-from streamlit.proto.DataFrame_pb2 import MultiIndex
 import json
 from fpdf import FPDF
 from datetime import datetime,time
@@ -92,6 +91,8 @@ def nav_mascotas():
         print_mascota(name)
 
 def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
+    if not nombre or not cedula:
+        return False
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Times", size = 14)
@@ -116,6 +117,8 @@ def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
     pdf.text(25,y_coord,txt=f'Mascota: {mascota}')
     
     pdf.output('formulario.pdf','F')
+    return pdf
+
 
 st.set_page_config(page_title='Zarpa',page_icon='🐶')
 
@@ -219,10 +222,18 @@ Luego proceder a descargarlo llenado.''')
 
     if st.checkbox("Mis datos están correctos.", value=False,help="¿Estás seguro?"):
         if st.button("Generar Formulario",help="Procede una vez seguro de tus datos."): 
-            generar_pdf(nombre,cedula,edad,mascota,direccion,adicional,fecha)
-            st.success("PDF Generado! Has iniciado una solicitud de adopción.")
-            with open("formulario.pdf","rb") as f:
-                base64_pdf = base64.b64encode(f.read()).decode('utf-8')
-                pdf_display = F'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-                st.markdown(pdf_display, unsafe_allow_html= True)
+            cert_pdf = generar_pdf(nombre,cedula,edad,mascota,direccion,adicional,fecha)
+            if cert_pdf:
+                st.success("PDF Generado! Has iniciado una solicitud de adopción.")
+                with open("formulario.pdf","rb") as f:
+                    base64_pdf = base64.b64encode(f.read()).decode('utf-8')
+                    pdf_display = F'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+                    st.download_button(
+                        label="Descargar certificado.",
+                        data=cert_pdf,
+                        file_name='certificadoZarpa.pdf',
+                        mime='data:application/pdf;base64',
+                    )
+
+                    st.markdown(pdf_display, unsafe_allow_html= True)
 
