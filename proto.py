@@ -228,12 +228,7 @@ Luego proceder a descargarlo llenado.''')
                 with open("formulario.pdf","rb") as f:
                     base64_pdf = base64.b64encode(f.read()).decode('utf-8')
                     pdf_display = F'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-                    st.download_button(
-                        label="Descargar certificado.",
-                        data=cert_pdf,
-                        file_name='certificadoZarpa.pdf',
-                        mime='data:application/pdf;base64',
-                    )
+                    st.download_button("Descargar certificado.",cert_pdf)
 
                     st.markdown(pdf_display, unsafe_allow_html= True)
 
