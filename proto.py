@@ -117,7 +117,7 @@ def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
     pdf.text(25,y_coord,txt=f'Mascota: {mascota}')
     
     pdf.output('formulario.pdf','F')
-    return pdf
+    return pdf.output(dest='S').encode('latin-1')
 
 
 st.set_page_config(page_title='Zarpa',page_icon='🐶')
@@ -228,7 +228,12 @@ Luego proceder a descargarlo llenado.''')
                 with open("formulario.pdf","rb") as f:
                     base64_pdf = base64.b64encode(f.read()).decode('utf-8')
                     pdf_display = F'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-                    st.download_button("Descargar certificado.",cert_pdf)
+                    st.download_button(
+                        label="Descargar certificado.",
+                        data=cert_pdf,
+                        file_name=f"certificadoZarpa{nombre}{mascota}.pdf",
+                        mime="application/pdf"
+                        )
 
-                    st.markdown(pdf_display, unsafe_allow_html= True)
+                st.markdown(pdf_display, unsafe_allow_html= True)
 
