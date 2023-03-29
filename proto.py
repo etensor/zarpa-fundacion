@@ -125,7 +125,7 @@ titulo.title(' Zarpa Fundación Animal')
 titulo.markdown('####  Adopta, no compres.')
 
 nombres = ["paco","socito","carlitos","firulais", 
-"peperson","Bestia",
+"peperson","ternura",
 "misifu","nicolas wilson stivenson","jampi","roberta"]
 
 tipos = ["Chandoberman","Criollito","Bull Terrier",
@@ -203,7 +203,7 @@ elif opcion_menu == "Buscar":
 
 elif opcion_menu == "Adoptar":
     st.header("Formulario de Adopción Zarpa")
-    with st.beta_expander("¿Cómo adoptar una mascota?"):
+    with st.expander("¿Cómo adoptar una mascota?"):
         st.markdown(r'''Para adoptar una mascota, debes llenar el siguiente formulario con tus datos,
 una vez estes list@ para adoptar la mascota de tu gusto. 
 Luego proceder a descargarlo llenado.''')
