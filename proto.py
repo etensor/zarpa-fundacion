@@ -82,8 +82,8 @@ def nav_mascotas():
     idx = st.session_state.idx
 
     button_izq, img, button_der = st.columns([0.75,4,0.5])
-    if button_izq.button("<",help="anterior") and idx > 0: idx=idx-1 
-    if button_der.button(">",help="siguiente") and idx < len(id_nombre)-1: idx=idx+1
+    if button_izq.button(" ← ",help="anterior") and idx > 0: idx=idx-1 
+    if button_der.button(" ➔ ",help="siguiente") and idx < len(id_nombre)-1: idx=idx+1
     st.session_state.idx=idx
 
     with img:
@@ -98,7 +98,7 @@ def generar_pdf(nombre, cedula, edad, mascota, direccion, adicional,fecha):
     pdf.set_title("Formulario Zarpa")
     now = datetime.now()
     hora = now.strftime("%H:%M:%S")
-    pdf.set_author("Jean Pierre Vargas, Juan David Jimenez, David Penilla")
+    pdf.set_author("David Penilla, Jean Pierre Vargas, Juan David Jimenez")
     pdf.image('./images/zarpa.jpg')
     pdf.cell(50,8,txt="Zarpa Fundacion\n")
     pdf.multi_cell(0,10,"\n\n        FORMULARIO DE ADOPCION\n\n")
@@ -125,11 +125,11 @@ titulo.title(' Zarpa Fundación Animal')
 titulo.markdown('####  Adopta, no compres.')
 
 nombres = ["paco","socito","carlitos","firulais", 
-"fiscalin pillin barbosa","esmadsito",
-"biki","nicolas wilson stivenson","jampi","mafecabal"]
+"peperson","Bestia",
+"misifu","nicolas wilson stivenson","jampi","roberta"]
 
 tipos = ["Chandoberman","Criollito","Bull Terrier",
-"Salchicha","Pit Bull","Animal salvaje neonazi",
+"Salchicha","Pit Bull","Animal salvaje",
 "gato","gato","gato","gato"]
 
 edades = [3,1,4,1,5,9,2,6,5,3]
